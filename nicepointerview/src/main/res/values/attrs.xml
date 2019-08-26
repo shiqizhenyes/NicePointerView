@@ -12,7 +12,6 @@
         <attr name="zoomStyle" format="integer"/>
     </declare-styleable>
 
-
     <integer name="DIDI">101</integer>
     <integer name="COMMON">102</integer>
     <integer name="MO_BAI">102</integer>

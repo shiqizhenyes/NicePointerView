@@ -29,14 +29,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-
-
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -76,8 +72,8 @@ install {
             project {
                 packaging 'aar'
                 // 项目描述，复制我的话，这里需要修改。
-                name 'nice view'// 可选，项目名称。
-                description 'nice view open source library'// 可选，项目描述。
+                name 'nice pointer view'// 可选，项目名称。
+                description 'nice pointer view open source library'// 可选，项目描述。
                 url siteUrl // 项目主页，这里是引用上面定义好。
 
                 // 软件开源协议，现在一般都是Apache License2.0吧，复制我的，这里不需要修改。
@@ -108,7 +104,6 @@ install {
     }
 }
 
-
 Properties properties = new Properties()
 properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
 bintray {
@@ -117,7 +112,7 @@ bintray {
     publish = true
     configurations = ['archives']
     pkg {
-        repo = 'NicePointerView'
+        repo = 'NiceView'
         name = 'NicePointerView'
         vcsUrl = 'https://github.com/shiqizhenyes/NicePointerView.git'
         websiteUrl = 'https://github.com/shiqizhenyes/NicePointerView'

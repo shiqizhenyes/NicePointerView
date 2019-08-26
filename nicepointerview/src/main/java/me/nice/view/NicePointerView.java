@@ -14,8 +14,11 @@ import android.view.View;
 
 import java.util.Objects;
 
-public class NicePointerView extends View {
 
+/**
+ * 地图定位点控件
+ */
+public class NicePointerView extends View {
 
     private int outColor;
     private int insideColor;
