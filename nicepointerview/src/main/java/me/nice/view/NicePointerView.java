@@ -14,11 +14,15 @@ import android.view.View;
 
 import java.util.Objects;
 
+import me.nice.view.util.DpUtil;
+
 
 /**
  * 地图定位点控件
  */
 public class NicePointerView extends View {
+
+    private View bubbleView;
 
     private int outColor;
     private int insideColor;
@@ -51,11 +55,9 @@ public class NicePointerView extends View {
 
     public NicePointerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final Resources resources = getResources();
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.NicePointerView, defStyleAttr, defStyleAttr);
         int indexCount = typedArray.getIndexCount();
-
         for (int i = 0; i < indexCount; i++) {
             int attr = typedArray.getIndex(i);
             if (attr == R.styleable.NicePointerView_outRadius) {
@@ -105,7 +107,6 @@ public class NicePointerView extends View {
     private int waveMaxRadius;
 
 
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -135,7 +136,7 @@ public class NicePointerView extends View {
         int height;
 
         if (withMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.AT_MOST) {
-            width = dip2px(getContext(), 120);
+            width = DpUtil.dip2px(getContext(), 120);
             height = (int) (width / goldenSection);
         }else if (withMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.EXACTLY){
             height = heightSpecSize;
@@ -147,7 +148,6 @@ public class NicePointerView extends View {
             width = withSpecSize;
             height = heightSpecSize;
         }
-
         setMeasuredDimension(width, height);
     }
 
@@ -155,6 +155,13 @@ public class NicePointerView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        if (bubbleView != null) {
+//            bubbleView.draw(canvas);
+//            bubbleView.onDrawForeground(canvas);
+//            bubbleView.setPivotX(centerX);
+//            bubbleView.setPivotY(centerY - getPaddingTop() - lineHeight - outRadius * 2 - 10);
+        }
 
         drawLine(canvas);
 
@@ -174,15 +181,12 @@ public class NicePointerView extends View {
     }
 
 
-    public int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
+    public void setBubbleView(View bubbleView) {
+        this.bubbleView = bubbleView;
+        invalidate();
     }
 
-//    public int px2dip(Context context, float pxValue) {
-//        final float scale = context.getResources().getDisplayMetrics().density;
-//        return (int) (pxValue / scale + 0.5f);
-//    }
+
 
     /**
      * 画线

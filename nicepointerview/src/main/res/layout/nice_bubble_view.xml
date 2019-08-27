@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/nv_dp_300"
+    android:layout_height="@dimen/nv_dp_100"
+    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bubble_bg">
+
+    <me.nice.view.NiceDotView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:dotRadius="@dimen/nv_dp_10"
+        app:dotSpace="@dimen/nv_dp_10"
+        app:dotAnimationColor="@color/nv_md_red_400"
+        app:dotColor="@color/nv_md_orange_50"
+        app:dotCount="3" />
+
+</RelativeLayout>
