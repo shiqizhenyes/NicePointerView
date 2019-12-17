@@ -15,14 +15,15 @@ import android.view.View;
 import java.util.Objects;
 
 import me.nice.view.util.DpUtil;
+import me.nice.view.util.ViewUtil;
+
+import static android.animation.ValueAnimator.INFINITE;
 
 
 /**
  * 地图定位点控件
  */
 public class NicePointerView extends View {
-
-    private View bubbleView;
 
     private int outColor;
     private int insideColor;
@@ -42,16 +43,21 @@ public class NicePointerView extends View {
     private int centerX;
     private int centerY;
     private int lineHeight;
+    private int waterWaveMinRadius;
+    private int waterWaveMaxRadius;
 
     private final double goldenSection = 0.618;
+
 
     public NicePointerView(Context context) {
         this(context, null);
     }
 
+
     public NicePointerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
 
     public NicePointerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -76,6 +82,10 @@ public class NicePointerView extends View {
                 jumpStyle = typedArray.getInt(i, context.getResources().getInteger(R.integer.DIDI));
             } else if (attr == R.styleable.NicePointerView_zoomStyle) {
                 zoomStyle = typedArray.getInt(i, context.getResources().getInteger(R.integer.MO_BAI));
+            } else if (attr == R.styleable.NicePointerView_waterWaveMinRadius) {
+                waterWaveMinRadius = typedArray.getDimensionPixelSize(i, 0);
+            } else if (attr == R.styleable.NicePointerView_waterWaveMaxRadius) {
+                waterWaveMaxRadius = typedArray.getDimensionPixelSize(i, 0);
             }
         }
         initPaint();
@@ -94,7 +104,7 @@ public class NicePointerView extends View {
         outPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         insidePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         wavePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        linePaint.setStrokeWidth(10);
+        linePaint.setStrokeWidth(5);
         linePaint.setColor(lineColor);
         outPaint.setColor(outColor);
         insidePaint.setColor(insideColor);
@@ -104,13 +114,15 @@ public class NicePointerView extends View {
 
     private int lineStarY;
     private int lineEndY;
-    private int waveMaxRadius;
+
 
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        waveMaxRadius = (int) (outRadius * 3 / (1 + goldenSection));
+        if (waterWaveMaxRadius == 0) {
+            waterWaveMaxRadius = (int) (outRadius * 3 / (1 + goldenSection));
+        }
         inSideRadius = outRadius / 4;
         centerX = w / 2;
         centerY = h / 2;
@@ -136,7 +148,7 @@ public class NicePointerView extends View {
         int height;
 
         if (withMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.AT_MOST) {
-            width = DpUtil.dip2px(getContext(), 120);
+            width = 120;
             height = (int) (width / goldenSection);
         }else if (withMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.EXACTLY){
             height = heightSpecSize;
@@ -148,6 +160,7 @@ public class NicePointerView extends View {
             width = withSpecSize;
             height = heightSpecSize;
         }
+
         setMeasuredDimension(width, height);
     }
 
@@ -155,13 +168,6 @@ public class NicePointerView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        if (bubbleView != null) {
-//            bubbleView.draw(canvas);
-//            bubbleView.onDrawForeground(canvas);
-//            bubbleView.setPivotX(centerX);
-//            bubbleView.setPivotY(centerY - getPaddingTop() - lineHeight - outRadius * 2 - 10);
-        }
 
         drawLine(canvas);
 
@@ -181,13 +187,6 @@ public class NicePointerView extends View {
     }
 
 
-    public void setBubbleView(View bubbleView) {
-        this.bubbleView = bubbleView;
-        invalidate();
-    }
-
-
-
     /**
      * 画线
      * @param canvas
@@ -202,9 +201,7 @@ public class NicePointerView extends View {
      * @param canvas
      */
     private void drawWave(Canvas canvas) {
-
         canvas.drawCircle(centerX + getPaddingLeft(), lineEndY, waveRadius, wavePaint);
-
     }
 
     ValueAnimator outValueAnimator;
@@ -310,13 +307,13 @@ public class NicePointerView extends View {
      */
     public void startWaveAnimation() {
 
-        waveValueAnimator = ValueAnimator.ofInt(waveRadius, waveMaxRadius);
+        waveValueAnimator = ValueAnimator.ofInt(waterWaveMinRadius, waterWaveMaxRadius);
 
         waveValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 waveRadius = (int) animation.getAnimatedValue();
-                invalidate();
+                postInvalidate();
             }
         });
 
@@ -324,6 +321,7 @@ public class NicePointerView extends View {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
+                waveRadius = waterWaveMinRadius;
             }
 
             @Override
@@ -332,7 +330,7 @@ public class NicePointerView extends View {
                 startWaveColorAnimation();
             }
         });
-        waveValueAnimator.setDuration(800);
+        waveValueAnimator.setDuration(1000);
         waveValueAnimator.start();
     }
 
@@ -402,12 +400,63 @@ public class NicePointerView extends View {
 
     }
 
+    private ValueAnimator didiJumpAnimator;
+    private int jumpHeight = 30;
+    private int centerYOld;
 
     /**
      * 滴滴风格跳动
      */
     public void startJumpDiDiStyleAnimation() {
+        cancelJumpDiDiStyleAnimation();
+        didiJumpAnimator = ValueAnimator.ofInt(centerY, centerY - jumpHeight , centerYOld);
+        didiJumpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                centerY = (int) animation.getAnimatedValue();
+                if (centerY == (centerYOld - jumpHeight)) {
+                    startLineJumpAnimation();
+                }
+                postInvalidate();
+            }
+        });
+        didiJumpAnimator.setDuration(400);
+        didiJumpAnimator.start();
+    }
 
+
+    public void cancelJumpDiDiStyleAnimation() {
+        if (didiJumpAnimator != null){
+            didiJumpAnimator.removeAllUpdateListeners();
+            didiJumpAnimator.cancel();
+        }
+        centerYOld = getHeight() / 2;
+        centerY = getHeight() / 2;
+    }
+
+    private ValueAnimator lineJumpAnimator;
+
+    private void startLineJumpAnimation() {
+
+        lineJumpAnimator = ValueAnimator.ofInt(lineEndY, lineEndY - jumpHeight, getHeight() / 2);
+        lineJumpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                lineEndY = (int) animation.getAnimatedValue();
+                postInvalidate();
+            }
+        });
+        lineJumpAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (waterWave) {
+                    startWaveAnimation();
+                }
+            }
+        });
+        lineJumpAnimator.setDuration(200);
+        lineJumpAnimator.start();
 
     }
 

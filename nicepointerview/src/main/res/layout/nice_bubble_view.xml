@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/nv_dp_300"
-    android:layout_height="@dimen/nv_dp_100"
-    android:gravity="center"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/bubble_bg">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <me.nice.view.NiceDotView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:dotRadius="@dimen/nv_dp_10"
-        app:dotSpace="@dimen/nv_dp_10"
-        app:dotAnimationColor="@color/nv_md_red_400"
-        app:dotColor="@color/nv_md_orange_50"
-        app:dotCount="3" />
+<!--    <me.nice.view.NicePointerView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:outRadius="@dimen/res_dp_20"-->
+<!--        app:lineHeight="@dimen/res_dp_50"-->
+<!--        app:lineColor="@color/res_md_black"-->
+<!--        app:insideColor="@color/res_md_white"-->
+<!--        app:outColor="@color/res_md_teal_300"-->
+<!--        app:jumpStyle="@integer/DIDI"-->
+<!--        app:zoomStyle="@integer/MO_BAI"-->
+<!--        app:waterWave="true"/>-->
 
 </RelativeLayout>

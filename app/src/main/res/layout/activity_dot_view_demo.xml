@@ -4,37 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/res_md_white"
     tools:context=".DotViewDemoActivity">
 
-
-    <me.nice.view.NiceDotView
-        android:id="@+id/niceDotView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:dotRadius="@dimen/nv_dp_30"
-        app:dotSpace="@dimen/nv_dp_30"
-        app:dotAnimationColor="@color/res_md_accentPink_a200"
-        app:dotColor="@color/res_md_amber_200"
-        app:dotCount="6"
-        app:layout_constraintBottom_toTopOf="@+id/startDotAnimator"
-        app:layout_constraintEnd_toEndOf="parent"
+    <me.nice.view.NicePointerView
+        android:id="@+id/nicePointerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:outRadius="30dp"
+        app:lineHeight="60dp"
+        app:lineColor="@color/res_md_red_800"
+        app:insideColor="@color/res_md_white"
+        app:outColor="@color/res_md_teal_300"
+        app:jumpStyle="@integer/DIDI"
+        app:zoomStyle="@integer/MO_BAI"
+        app:waterWave="true"
+        app:waterWaveMinRadius="10dp"
+        app:waterWaveMaxRadius="120dp" />
 
     <Button
-        android:id="@+id/startDotAnimator"
+        android:id="@+id/jumpAnimator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="156dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="40dp"
+        android:text="跳动"/>
 
 
 </android.support.constraint.ConstraintLayout>
